@@ -1,0 +1,27 @@
+"-------------------------------------------------------------------------------
+"  Vim / GVim custom configuration file
+"  Maintainer: tomuchn <tomuchan76@gmail.com>
+"              http://tomuchan.de
+"  Version:    0.1 - 17/01/2013 20:00:00
+"-------------------------------------------------------------------------------
+" load settings for vundle
+"-------------------------------------------------------------------------------
+source ~/.vim/setting/bundle.vim
+
+set nocompatible                            " get rid of vi-mode
+set history=10000                           " set number of history entries
+filetype indent on                          " enable indentation on filetype
+filetype plugin on                          " enable plugins on filetype
+"-------------------------------------------------------------------------------
+"  load default settings 
+"-------------------------------------------------------------------------------
+source ~/.vim/setting/default.vim
+"-------------------------------------------------------------------------------
+"  load custom settings 
+"-------------------------------------------------------------------------------
+source ~/.vim/setting/mapping.vim
+source ~/.vim/setting/appearance.vim
+"-------------------------------------------------------------------------------
+"  load syntax settings 
+"-------------------------------------------------------------------------------
+source ~/.vim/setting/filetype.vim
