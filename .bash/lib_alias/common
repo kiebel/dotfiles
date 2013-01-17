@@ -1,0 +1,7 @@
+#vim:set syn=sh:
+# common aliases
+
+alias grep='grep --color=auto'
+alias lf='ls -Arthop --color=auto'
+alias ll='ls -lisah --color=auto'
+alias ls='ls --color=auto'
