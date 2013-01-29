@@ -8,6 +8,7 @@
     lg  = log -p
     lgl = log --graph --decorate --pretty=oneline --abbrev-commit --all
     ls  = ls-files
+    vdf = difftool -y -t vimdiff -R
 [color]
     ui = auto
     branch = auto
@@ -30,12 +31,10 @@
 [core]
     whitespace=fix,-indent-with-non-tab,trailing-space,cr-at-eol
     editor = vim
-[diff]
-    external = git_diff_wrapper
 [merge]
-    tool = threesome
-[mergetool "threesome"]
-    cmd = "vim -f $BASE $LOCAL $REMOTE $MERGED -c 'ThreesomeInit'"
+    tool = splice
+[mergetool "splice"]
+    cmd = "vim -f $BASE $LOCAL $REMOTE $MERGED -c 'SpliceInit'"
     trustExitCode = true
 [user]
     name = Thomas Kiebel
