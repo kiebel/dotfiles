@@ -1,0 +1,6 @@
+# vim: set syn=sh:
+#
+for item in ~/.bash/lib_func/completion_case/*; do
+    [ -f $item ] && . $item
+done
+
