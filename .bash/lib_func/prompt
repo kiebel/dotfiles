@@ -24,15 +24,28 @@ __bash_prompt() {
         [ -n "$branch" ] || return
 
         local marks
-        [ -n "$(git status --porcelain)" ] && marks+=" $SYMBOL_VCS_BRANCH_CHANGED "
+        [ -n "$(git status --porcelain)" ] && marks+="$SYMBOL_VCS_BRANCH_CHANGED"
 
-        local stat="$(git status --porcelain --branch | grep '^##' | grep -o '\[.\+\]$')"
-        local Nah="$(echo $stat | grep -o 'ahead \d\+' | grep -o '\d\+')"
-        [ -n "$Nah" ] && marks+=" $SYMBOL_VCS_NEED_PUSH$Nah"
-        local Nbe="$(echo $stat | grep -o 'behind \d\+' | grep -o '\d\+')"
-        [ -n "$Nbe" ] && marks+=" $SYMBOL_VCS_NEED_PULL$Nbe"
+        local stat="$(git status --porcelain --branch | grep '^##' | grep -o '\[.\+\]$' | sed 's:^.\(.*\).$:\1:')"
+        local type=()
+        local number=()
+        IFS=' ' read -r type number <<< "$stat"
+        case "$type" in
+            ahead)  marks+="$SYMBOL_VCS_NEED_PUSH$number"
+                    ;;
+            behind) marks+="$SYMBOL_VCS_NEED_PULL$number"
+                    ;;
+        esac
+        echo -e " $SYMBOL_VCS_BRANCH $branch $marks "
+    }
 
-        echo -e "$SYMBOL_VCS_BRANCH $branch$marks "
+    __svn_info() {
+        local rev="$(svn info 2>/dev/null | grep Revision | sed -e 's/Revision: //')"
+        [ -n "$rev" ] || return
+        local marks
+        [ -n "$(svn status)" ] && marks+="$SYMBOL_VCS_BRANCH_CHANGED"
+
+        echo -e " $SYMBOL_VCS_BRANCH svn:$rev $marks "
     }
 
     # define prompt segments
@@ -60,6 +73,7 @@ __bash_prompt() {
         vcs_status=()
 
         [ -z "$vcs_status" ] && [ -x "$(which git)" ] && vcs_status+="$(__git_info)"
+        [ -z "$vcs_status" ] && [ -x "$(which svn)" ] && vcs_status+="$(__svn_info)"
         [[ -n "$vcs_status" ]] && echo -e "\\[\\e[38;5;148m\\]\\[\\e[48;5;233m\\]$vcs_status"
     }
 
