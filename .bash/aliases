@@ -1,0 +1,4 @@
+# vim: set syn=sh:
+for item in ~/.bash/lib_alias/*; do
+    [ -f $item ] && . $item
+done

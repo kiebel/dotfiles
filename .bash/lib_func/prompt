@@ -1,0 +1,91 @@
+#vim:set syn=sh:
+# prompt related bash configurations
+
+__bash_prompt() {
+    readonly SYMBOL_JOBS='%'
+    readonly SYMBOL_SEPERATOR=''
+    readonly SYMBOL_SSH='⚡'
+    readonly SYMBOL_VCS_BRANCH=''
+    readonly SYMBOL_VCS_BRANCH_CHANGED='±'
+    readonly SYMBOL_VCS_NEED_PULL='⇣'
+    readonly SYMBOL_VCS_NEED_PUSH='⇡' #⚡⚙±✚●✘⇡⇣
+
+    # prompt_segment( BG , FG , STRING )
+    prompt_segment() { 
+        local bg fg
+
+        [[ -n $1 ]] && bg="$1" || bg="$COLOR_DEFAULT_BG"
+        [[ -n $2 ]] && fg="$2" || fg="$COLOR_DEFAULT_FG"
+        [[ -n $3 ]] && echo -en "\\[\\e$fg\\]\\[\\e$bg\\]$3"
+    }
+
+    __git_info() {
+        local branch="$(git symbolic-ref --short HEAD 2>/dev/null || git describe --tags --always 2>/dev/null)"
+        [ -n "$branch" ] || return
+
+        local marks
+        [ -n "$(git status --porcelain)" ] && marks+="$SYMBOL_VCS_BRANCH_CHANGED"
+
+        local stat="$(git status --porcelain --branch | grep '^##' | grep -o '\[.\+\]$' | sed 's:^.\(.*\).$:\1:')"
+        local type=()
+        local number=()
+        IFS=' ' read -r type number <<< "$stat"
+        case "$type" in
+            ahead)  marks+="$SYMBOL_VCS_NEED_PUSH$number"
+                    ;;
+            behind) marks+="$SYMBOL_VCS_NEED_PULL$number"
+                    ;;
+        esac
+        echo -e " $SYMBOL_VCS_BRANCH $branch $marks "
+    }
+
+    __svn_info() {
+        local rev="$(svn info 2>/dev/null | grep Revision | sed -e 's/Revision: //')"
+        [ -n "$rev" ] || return
+        local marks
+        [ -n "$(svn status)" ] && marks+="$SYMBOL_VCS_BRANCH_CHANGED"
+
+        echo -e " $SYMBOL_VCS_BRANCH svn:$rev $marks "
+    }
+
+    # define prompt segments
+    __info_context() {
+        local context
+        context="\\[\\e[38;5;202m\\]\\[\\e[48;5;233m\\]\\u\\[\\e[38;5;112m\\]\\[\\e[48;5;233m\\]@\\h \[\e[48;5;234m\]\[\e[38;5;233m\]$SYMBOL_SEPERATOR "
+        [[ -n "$context" ]] && echo -e "$context"
+    }
+
+    __info_path() {
+        echo -e "\\[\\e[38;5;242m\\]\\[\\e[48;5;234m\\]\\w \[\e[48;5;233m\]\[\e[38;5;234m\]$SYMBOL_SEPERATOR "
+    }
+
+    __info_status() {
+        local symbols
+        symbols="\\[\\e[38;5;236m\\]\\[\\e[48;5;233m\\]"
+        [[ $(jobs -l | wc -l) -gt 0 ]] && symbols+="$SYMBOL_JOBS"
+        symbols+="\\$\\[\\e[0m\\] "
+
+        [[ -n "$symbols" ]] && echo -e "$symbols"
+    }
+
+    __info_vcs() {
+        local vcs_status
+        vcs_status=()
+
+        [ -z "$vcs_status" ] && [ -x "$(which git)" ] && vcs_status+="$(__git_info)"
+        [ -z "$vcs_status" ] && [ -x "$(which svn)" ] && vcs_status+="$(__svn_info)"
+        [[ -n "$vcs_status" ]] && echo -e "\\[\\e[38;5;148m\\]\\[\\e[48;5;233m\\]$vcs_status"
+    }
+
+    ps1() {
+        PS1="$(__info_context)"
+        PS1+="$(__info_path)"
+        PS1+="$(__info_vcs)"
+        PS1+="$(__info_status)"
+    }
+
+    PROMPT_DIRTRIM=3
+    PROMPT_COMMAND=ps1
+}
+__bash_prompt
+unset __bash_prompt

@@ -1,0 +1,3 @@
+#!/bin/sh
+CLAYOUT=$(setxkbmap -query | grep layout | cut -d ":" -f 2 | sed -e 's/ //g')
+[[ $CLAYOUT == "us" ]] && setxkbmap -layout de || setxkbmap -layout us

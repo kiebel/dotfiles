@@ -1,0 +1,3 @@
+#vim:set syn=sh:
+# uses bash colorscheme solarized dark
+eval `dircolors ~/.bash/lib_func/color_scheme/dircolors.256dark`
