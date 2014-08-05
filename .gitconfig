@@ -15,27 +15,38 @@
     diff = auto
     status = auto
 [color "branch"]
-    current = yellow reverse
-    local = yellow
-    remote = green
+    current = 33 reverse
+    local = 37
+    remote = 166
+[color "decorate"]
+    branch = 64
+    remoteBranch = 166
+    stash = 160
+    tag = 37
+    HEAD = 33
 [color "diff"]
-    meta = yellow bold
-    frag = magenta bold
-    old = red bold
-    new = green bold
-    whitespace = red reverse
+    meta = 33
+    frag = 37
+    old = 166
+    new = 64
+    whitespace = 160 reverse
+    plain = 245
 [color "status"]
-    added = yellow
-    changed = green
-    untracked = cyan
+    added = 64
+    branch = 37
+    changed = 166
+    untracked = 33
 [core]
     whitespace=fix,-indent-with-non-tab,trailing-space,cr-at-eol
     editor = vim
+    pager = "less -F -X"
 [merge]
     tool = splice
 [mergetool "splice"]
     cmd = "vim -f $BASE $LOCAL $REMOTE $MERGED -c 'SpliceInit'"
     trustExitCode = true
+[push]
+    default = simple
 [user]
     name = Thomas Kiebel
     email = tomuchan76@gmail.com
