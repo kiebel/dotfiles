@@ -1,5 +1,5 @@
 #!/bin/bash
-for item in .bash .bash_logout .bashrc bin
+for item in .bash .bash_logout .bashrc .gitconfig bin
 do
     [ -L ~/$item ] && rm ~/$item || rm -rf ~/$item
     ln -s $PWD/$item ~/$item

@@ -1,0 +1,59 @@
+# vim :set et:
+[alias]
+    st  = status
+    br  = branch
+    ci  = commit
+    co  = checkout
+    cp  = cherry-pick
+    df  = diff
+    dc  = diff --cached
+    lg  = log -p
+    lgl = log --abbrev-commit --all --decorate --graph --pretty=oneline
+    llg = log --abbrev-commit --decorate --date=short --pretty=format:'%C(136)%h %C(37)%ad%C(130)%d %C(244)%s %C(33)[%cn]'
+    ls  = ls-files
+    sa  = stash apply
+    sd  = stash drop
+    sl  = stash list
+    ss  = stash save
+    vdf = difftool -y -t vimdiff -R
+[color]
+    ui = auto
+    branch = auto
+    diff = auto
+    status = auto
+[color "branch"]
+    current = 33 reverse
+    local = 37
+    remote = 166
+[color "decorate"]
+    branch = 64
+    remoteBranch = 166
+    stash = 160
+    tag = 37
+    HEAD = 33
+[color "diff"]
+    meta = 33
+    frag = 37
+    old = 166
+    new = 64
+    whitespace = 160 reverse
+    plain = 245
+[color "status"]
+    added = 64
+    branch = 37
+    changed = 166
+    untracked = 33
+[core]
+    whitespace=fix,-indent-with-non-tab,trailing-space,cr-at-eol
+    editor = vim
+    pager = "less -F -X"
+[merge]
+    tool = splice
+[mergetool "splice"]
+    cmd = "vim -f $BASE $LOCAL $REMOTE $MERGED -c 'SpliceInit'"
+    trustExitCode = true
+[push]
+    default = simple
+[user]
+    name = Thomas Kiebel
+    email = tomuchan76@gmail.com
