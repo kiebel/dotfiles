@@ -27,15 +27,13 @@ __bash_prompt() {
         [ -n "$(git status --porcelain)" ] && marks+="$SYMBOL_VCS_BRANCH_CHANGED"
 
         local stat="$(git status --porcelain --branch | grep '^##' | grep -o '\[.\+\]$' | sed 's:^.\(.*\).$:\1:')"
-        local type=()
-        local number=()
-        IFS=' ' read -r type number <<< "$stat"
-        case "$type" in
-            ahead)  marks+="$SYMBOL_VCS_NEED_PUSH$number"
-                    ;;
-            behind) marks+="$SYMBOL_VCS_NEED_PULL$number"
-                    ;;
-        esac
+
+        stat=${stat// /};
+        stat=${stat//,/};
+        stat=${stat/ahead/$SYMBOL_VCS_NEED_PUSH};
+        stat=${stat/behind/$SYMBOL_VCS_NEED_PULL};
+        marks+="$stat"
+
         echo -e " $SYMBOL_VCS_BRANCH $branch $marks "
     }
 
